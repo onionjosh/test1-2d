@@ -3,20 +3,22 @@ using UnityEngine;
 public class PlayerStats : MonoBehaviour
 {
     // Base (initial) values
-    private float baseMaxHealth = 100f;
-    private float baseRecovery = 0f;
-    private int baseArmor = 0;
-    private float baseMoveSpeed = 100f;
-    private float baseDamageMod = 100f;
-    private float baseAttackRate = 100f;
-    private float baseArea = 100f;
-    private float baseSpeed = 100f;
-    private float baseDuration = 100f;
-    private int baseMagnet = 30;
-    private float baseLuck = 100f;
-    private float baseGrowth = 100f;
-    private float baseMoney = 100f;
-    private int baseRevival = 0;
+    public float baseMaxHealth = 100f;
+    public float baseRecovery = 0f;
+    public int baseArmor = 0;
+    public float baseMoveSpeed = 100f;
+    public float baseDamageMod = 100f;
+    public float baseAttackRate = 100f;
+    public float baseArea = 100f;
+    public float baseSpeed = 100f;
+    public float baseDuration = 100f;
+    public int baseMagnet = 30;
+    public float baseLuck = 100f;
+    public float baseGrowth = 100f;
+    public float baseMoney = 100f;
+    public int baseRevival = 0;
+
+
 
     // Current values (modifiable during a game run)
     public float MaxHealth { get; protected set; }
@@ -34,28 +36,28 @@ public class PlayerStats : MonoBehaviour
     public float Money { get; protected set; }
     public int Revival { get; protected set; }
 
+
+    public static PlayerStats Instance { get; private set; }
+    private void Awake()
+    {
+        // Ensure that there is only one instance of PlayerStats
+        if (Instance == null)
+        {
+            Instance = this;
+            DontDestroyOnLoad(gameObject); // This makes sure the object stays when changing scenes
+        }
+        else
+        {
+            Destroy(gameObject); // This destroys the duplicate PlayerStats object
+        }
+    }
+
+
     private void Start()
     {
         ResetToBase();
     }
 
-    public void ResetToBase()
-    {
-        MaxHealth = baseMaxHealth;
-        Recovery = baseRecovery;
-        Armor = baseArmor;
-        MoveSpeed = baseMoveSpeed;
-        DamageMod = baseDamageMod;
-        AttackRate = baseAttackRate;
-        Area = baseArea;
-        Speed = baseSpeed;
-        Duration = baseDuration;
-        Magnet = baseMagnet;
-        Luck = baseLuck;
-        Growth = baseGrowth;
-        Money = baseMoney;
-        Revival = baseRevival;
-    }
 
     public void ApplyMaxHealthMod(float value)
     {
@@ -126,4 +128,26 @@ public class PlayerStats : MonoBehaviour
     {
         Revival += value;
     }
+
+    public void ResetToBase()
+    {
+        // Reset all the player stats to their initial base values
+        // This is called when we need the player to return to a 'fresh' state (e.g., new level or new game)
+
+        MaxHealth = baseMaxHealth;
+        Recovery = baseRecovery;
+        Armor = baseArmor;
+        MoveSpeed = baseMoveSpeed;
+        DamageMod = baseDamageMod;
+        AttackRate = baseAttackRate;
+        Area = baseArea;
+        Speed = baseSpeed;
+        Duration = baseDuration;
+        Magnet = baseMagnet;
+        Luck = baseLuck;
+        Growth = baseGrowth;
+        Money = baseMoney;
+        Revival = baseRevival;
+    }
+
 }

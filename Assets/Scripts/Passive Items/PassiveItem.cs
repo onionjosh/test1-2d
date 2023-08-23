@@ -47,6 +47,8 @@ public class PassiveItem : ScriptableObject
 
     public void UpgradeToNewRank(PlayerStats playerStats)
     {
+        // This method is called to 'level up' this passive item
+        // When this happens, the new effects are applied to the player
         if (currentRank < MaxLevel)
         {
             currentRank++;
@@ -56,6 +58,8 @@ public class PassiveItem : ScriptableObject
 
     public void ApplyEffect(PlayerStats playerStats)
     {
+        // This method is called to apply this passive item's effects to the given player
+        // It uses the player's ApplyX methods to update the player's stats
         if (currentRank >= 1 && currentRank <= effects.Count)
         {
             Effect effectToApply = effects[currentRank - 1].effect;
@@ -89,6 +93,9 @@ public class PassiveItem : ScriptableObject
 
     public void ResetToBase()
     {
+        // Reset this passive item back to its initial rank
+        // This might be called when the player moves to a new level or after player death, 
+        // or when you want to remove this item's effects from the player
         currentRank = 1;
 
         // Get the base rank stats (i.e., the stats for Rank 1)

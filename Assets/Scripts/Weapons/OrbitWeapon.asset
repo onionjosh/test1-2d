@@ -10,21 +10,39 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7465622a78452064ba5c41f08e7f3598, type: 3}
-  m_Name: New Weapon
+  m_Name: OrbitWeapon
   m_EditorClassIdentifier: 
-  WeaponName: 
-  MaxLevel: 0
-  Rarity: 0
+  WeaponName: OrbitWeapon
+  MaxLevel: 5
+  Rarity: 100
   currentRank: 1
   Ranks:
-  - rankName: 
-    BaseDamage: 0
-    Area: 0
-    Speed: 0
-    Duration: 0
+  - rankName: Rank 1
+    BaseDamage: 5
+    Area: 30
+    Speed: 5
+    Duration: 50
     UsePierce: 0
     Pierce: 0
-    AttackRate: 0
+    AttackRate: 10
+    UseHitboxDelay: 0
+    HitboxDelay: 0
+    UseKnockback: 0
+    Knockback: 0
+    UsePoolLimit: 0
+    PoolLimit: 0
+    UseCritMulti: 0
+    CritMulti: 0
+    BlockByWalls: 0
+    IgnorePlayerStats: 0
+  - rankName: Rank 2
+    BaseDamage: 5
+    Area: 150
+    Speed: 3
+    Duration: 20
+    UsePierce: 0
+    Pierce: 0
+    AttackRate: 0.07
     UseHitboxDelay: 0
     HitboxDelay: 0
     UseKnockback: 0

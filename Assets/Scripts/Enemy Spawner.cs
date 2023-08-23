@@ -23,13 +23,20 @@ public class EnemySpawner : MonoBehaviour
     {
         Vector3 spawnPosition = Camera.main.ViewportToWorldPoint(new Vector3(Random.Range(0f, 1f), Random.Range(0f, 1f), Camera.main.nearClipPlane));
 
-        // Calculate direction from the player.
-        Vector3 directionFromPlayer = (spawnPosition - playerTransform.position).normalized;
+        if(playerTransform != null)
+        {
+            // your spawning logic that uses playerTransform.position
+            
+            // Calculate direction from the player.
+            Vector3 directionFromPlayer = (spawnPosition - playerTransform.position).normalized;
 
-        // Adjust the spawn position to be at least 'spawnDistanceFromPlayer' units away from the player.
-        spawnPosition = playerTransform.position + directionFromPlayer * spawnDistanceFromPlayer;
+            // Adjust the spawn position to be at least 'spawnDistanceFromPlayer' units away from the player.
+            spawnPosition = playerTransform.position + directionFromPlayer * spawnDistanceFromPlayer;
 
-        Instantiate(enemyPrefab, spawnPosition, Quaternion.identity);
+            Instantiate(enemyPrefab, spawnPosition, Quaternion.identity);
+        }
+
+
     }
 
     // Helper method to count the number of active enemies in the scene.

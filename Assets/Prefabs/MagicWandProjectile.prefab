@@ -12,9 +12,9 @@ GameObject:
   - component: {fileID: 6743831634926609283}
   - component: {fileID: 5474001830820703732}
   - component: {fileID: 5450078116004554855}
-  - component: {fileID: -7486699035590111998}
+  - component: {fileID: -7529898292070698962}
   m_Layer: 9
-  m_Name: Magic Wand prefab
+  m_Name: MagicWandProjectile
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -73,8 +73,8 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
+  m_SortingLayerID: 1443001811
+  m_SortingLayer: 2
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: 1dff9b50d4d753b40babfc4789b1b6f4, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -129,7 +129,7 @@ CircleCollider2D:
     m_Bits: 0
   m_ExcludeLayers:
     serializedVersion: 2
-    m_Bits: 512
+    m_Bits: 0
   m_LayerOverridePriority: 0
   m_ForceSendLayers:
     serializedVersion: 2
@@ -149,7 +149,7 @@ CircleCollider2D:
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
   m_Radius: 0.04
---- !u!114 &-7486699035590111998
+--- !u!114 &-7529898292070698962
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -161,5 +161,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 593ece501ca5fb14a9f05f5ac6b093c6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  shooterTag: Player
-  damage: 25
+  Player: Player
+  speed: 0
+  duration: 0
+  area: 0
+  damage: 0
+  enemyTag: Enemy

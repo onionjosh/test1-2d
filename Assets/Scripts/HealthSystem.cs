@@ -1,32 +1,27 @@
 using UnityEngine;
-using UnityEngine.UI;
+using System;
 
 public class HealthSystem : MonoBehaviour
 {
     [SerializeField] private int maxHealth = 100;
     private int currentHealth;
 
-    [SerializeField] private bool isPlayer = false;
-    [SerializeField] private Text deathText;
-
-    private DamageFlash damageFlash;
-    private DamageDisplay damageDisplay;
+    private DamageEffects damageEffects; // Reference to DamageEffects
 
     public delegate void HealthChange(int currentHealth, int maxHealth);
     public event HealthChange OnHealthChanged;
 
-    public event System.Action OnDeath; // Here's your new OnDeath event declaration
+    public event Action OnDamaged;
+    public event Action OnDeath;
+
+    private void Awake()
+    {
+        damageEffects = GetComponent<DamageEffects>(); // Get the DamageEffects component
+    }
 
     private void Start()
     {
         currentHealth = maxHealth;
-        if (deathText) deathText.enabled = false;
-    }
-
-    private void Awake()
-    {
-        damageFlash = GetComponent<DamageFlash>();
-        damageDisplay = FindObjectOfType<DamageDisplay>();
     }
 
     public void TakeDamage(int damage)
@@ -36,12 +31,14 @@ public class HealthSystem : MonoBehaviour
         currentHealth = Mathf.Clamp(currentHealth, 0, maxHealth);
 
         OnHealthChanged?.Invoke(currentHealth, maxHealth);
+        OnDamaged?.Invoke();
 
-        if (damageFlash)
-            damageFlash.Flash();
-
-        if (damageDisplay)
-            damageDisplay.DisplayDamage(damage, transform.position);
+        // Trigger DamageEffects when damaged
+        if(damageEffects != null)
+        {
+            damageEffects.Flash(); // Flash the sprite
+            damageEffects.DisplayDamage(damage, transform.position); // Display the damage text
+        }
 
         if (currentHealth <= 0)
         {
@@ -53,25 +50,18 @@ public class HealthSystem : MonoBehaviour
     {
         currentHealth += amount;
         currentHealth = Mathf.Clamp(currentHealth, 0, maxHealth);
-
         OnHealthChanged?.Invoke(currentHealth, maxHealth);
-    }
-
-    private void Die()
-    {
-        Debug.Log($"{gameObject.name} died.");
-        OnDeath?.Invoke();  // Here's where the OnDeath event is invoked
-
-        if (!deathText) Debug.LogError("deathText is not assigned.");
-
-        if (isPlayer && deathText)
-            deathText.enabled = true;
-
-        Destroy(gameObject);
     }
 
     public int GetCurrentHealth()
     {
         return currentHealth;
+    }
+
+    private void Die()
+    {
+        // Trigger the OnDeath event
+        OnDeath?.Invoke();
+        Destroy(gameObject);
     }
 }

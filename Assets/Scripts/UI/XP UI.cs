@@ -6,6 +6,7 @@ public class XPUI : MonoBehaviour
     public ExperienceSystem experienceSystem;
     public Slider xpSlider;
     public Text levelText;
+    public LevelUpUI levelUpUI; // Reference to the LevelUpUI script
 
     private void Start()
     {
@@ -22,6 +23,6 @@ public class XPUI : MonoBehaviour
     private void UpdateLevelUI()
     {
         levelText.text = "Level: " + experienceSystem.CurrentLevel;
+        levelUpUI.ShowLevelUpOptions();  // Now you can call methods from LevelUpUI
     }
-
 }
