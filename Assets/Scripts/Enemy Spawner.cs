@@ -17,27 +17,45 @@ public class EnemySpawner : MonoBehaviour
             SpawnEnemy();
             nextSpawnTime = Time.time + 1f / spawnRate;
         }
+
+        if (enemyPrefab == null)
+        {
+            Debug.LogError("Enemy prefab not assigned in the Inspector");
+        }
+        else
+        {
+            Debug.Log("Enemy prefab is assigned");
+        }
     }
 
     private void SpawnEnemy()
     {
-        Vector3 spawnPosition = Camera.main.ViewportToWorldPoint(new Vector3(Random.Range(0f, 1f), Random.Range(0f, 1f), Camera.main.nearClipPlane));
-
-        if(playerTransform != null)
+        if (enemyPrefab == null)
         {
-            // your spawning logic that uses playerTransform.position
-            
-            // Calculate direction from the player.
-            Vector3 directionFromPlayer = (spawnPosition - playerTransform.position).normalized;
-
-            // Adjust the spawn position to be at least 'spawnDistanceFromPlayer' units away from the player.
-            spawnPosition = playerTransform.position + directionFromPlayer * spawnDistanceFromPlayer;
-
-            Instantiate(enemyPrefab, spawnPosition, Quaternion.identity);
+            Debug.LogError("Enemy prefab is null!");
+            return;
         }
 
+        if (playerTransform != null)
+        {
+            // Generate a random angle
+            float randomAngle = Random.Range(0, 360);
 
+            // Create a Vector3 direction based on the angle
+            Vector3 directionFromPlayer = new Vector3(Mathf.Sin(randomAngle), Mathf.Cos(randomAngle), 0).normalized;
+
+            // Calculate spawn position to be at least 'spawnDistanceFromPlayer' units away from the player
+            Vector3 spawnPosition = playerTransform.position + directionFromPlayer * spawnDistanceFromPlayer;
+
+            // Instantiate the enemy
+            Instantiate(enemyPrefab, spawnPosition, Quaternion.identity);
+        } 
+        else 
+        {
+            Debug.LogError("playerTransform is null!");
+        }
     }
+
 
     // Helper method to count the number of active enemies in the scene.
     private int ActiveEnemyCount()

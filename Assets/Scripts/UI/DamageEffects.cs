@@ -28,7 +28,19 @@ public class DamageEffects : MonoBehaviour
         // Initialize Damage Display
         if (!canvasGameObject)
             canvasGameObject = GameObject.Find("Canvas");
+
+
+        if (!damageTextPrefab)
+        {
+            damageTextPrefab = Resources.Load("Assets/Prefabs/damageTextPrefab") as GameObject;
+        }
+
+        if (!canvasGameObject)
+        {
+            canvasGameObject = GameObject.FindWithTag("Canvas");
+        }
     }
+
 
     // Damage Display Methods
 
