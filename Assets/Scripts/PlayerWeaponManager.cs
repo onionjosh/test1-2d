@@ -71,12 +71,6 @@ public class PlayerWeaponManager : MonoBehaviour
         Destroy(weapon.gameObject);
     }
 
-   // public void RemoveWeapon(WeaponControllerFireball fireball)
-    //{
-    //    equippedWeapons.Remove(fireball);
-    //    Destroy(weapon.gameObject);
-    //}
-
 
     public void ClearWeapons()
     {

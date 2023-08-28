@@ -27,9 +27,14 @@ public class LevelUpUI : MonoBehaviour
 
     private void PopulateOptions()
     {
-        // Randomly select items/weapons and set the text for each option
-        // This will require a bit more logic, especially if you want to check against player's current inventory
+        // Assume that gameManager.playerInventory.availableWeapons and availablePassiveItems are lists of Weapons and PassiveItems
+        for (int i = 0; i < optionTexts.Length; i++)
+        {
+            // Here, randomly select from availableWeapons and availablePassiveItems
+            // Set optionTexts[i].text accordingly
+        }
     }
+
 
     public void OnOptionSelected(int optionIndex)
     {

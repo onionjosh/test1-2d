@@ -27,17 +27,21 @@ public class DamageEffects : MonoBehaviour
 
         // Initialize Damage Display
         if (!canvasGameObject)
-            canvasGameObject = GameObject.Find("Canvas");
-
+        {
+            canvasGameObject = GameObject.FindWithTag("Canvas");
+            if (!canvasGameObject)
+            {
+                Debug.LogError("Canvas GameObject is missing or not tagged correctly!");
+            }
+        }
 
         if (!damageTextPrefab)
         {
-            damageTextPrefab = Resources.Load("Assets/Prefabs/damageTextPrefab") as GameObject;
-        }
-
-        if (!canvasGameObject)
-        {
-            canvasGameObject = GameObject.FindWithTag("Canvas");
+            damageTextPrefab = Resources.Load("damageTextPrefab") as GameObject;  // assuming prefab is in a folder named Resources
+            if (!damageTextPrefab)
+            {
+                Debug.LogError("Damage Text Prefab is missing or not in Resources folder!");
+            }
         }
     }
 

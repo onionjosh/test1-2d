@@ -1,24 +1,38 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.Events;
+using UnityEngine.UI; // for using Button and Text
+using System;
 
 public class GameManager : MonoBehaviour
 {
     public Inventory playerInventory;
     public PlayerStats playerStats;
+    public GameObject LevelUpUI; // Drag your LevelUpUI GameObject here
+    public LevelUpUI levelUpUI;
+    public Button[] LevelUpButtons;  // Assuming 4 buttons
 
     public GameState currentState = GameState.MainMenu;
-    public GameObject deathMenuUI; // Drag your Death Menu UI here
+    public GameObject deathMenuUI;
 
     private void Start()
     {
         Debug.Log("GameManager Started");
-        // Initially hide the death menu
+
         deathMenuUI.SetActive(false);
 
-        // Subscribe to player's OnDeath event
         HealthSystem playerHealth = FindObjectOfType<Player>().GetComponent<HealthSystem>();
         if (playerHealth)
             playerHealth.OnDeath += HandlePlayerDeath;
+
+        ExperienceSystem playerXPSystem = FindObjectOfType<ExperienceSystem>();
+        if (playerXPSystem)
+        {
+            playerXPSystem.OnLevelUp.AddListener(OnPlayerLevelUp);
+        }
+
+        // Disable LevelUpUI at start
+        LevelUpUI.SetActive(false);
 
         Time.timeScale = 1f;
     }
@@ -30,42 +44,23 @@ public class GameManager : MonoBehaviour
         GameOver
     }
 
-    public void StartGame()
-    {
-        Debug.Log("Game Started");
-        currentState = GameState.Playing;
-        
-        // Reset and initialize game properties here
-        ResetPlayerForNewRun();
-
-        // Hide the death menu
-        deathMenuUI.SetActive(false);
-        
-        // Resume game time
-        Time.timeScale = 1f;
-    }
-
     private void Update()
     {
         switch (currentState)
         {
             case GameState.MainMenu:
-                // Make sure the death UI is off
                 deathMenuUI.SetActive(false);
                 break;
-                
+
             case GameState.Playing:
-                // Again, ensure the death UI is off during gameplay
                 deathMenuUI.SetActive(false);
                 break;
-                
+
             case GameState.GameOver:
-                // Here, you'd activate the death UI
                 deathMenuUI.SetActive(true);
                 break;
         }
     }
-
 
     private void HandlePlayerDeath()
     {
@@ -75,47 +70,81 @@ public class GameManager : MonoBehaviour
         Time.timeScale = 0f;
     }
 
-    public void EndGame()
+    public void OnPlayerLevelUp()
     {
-        Debug.Log("EndGame Called");
-        // Reset all owned passive items to their base stats
-        foreach (PassiveItem item in playerInventory.ownedPassiveItems)
+        LevelUpUI.SetActive(true);
+        Time.timeScale = 0f;
+        // Defer to LevelUpUI to show options and capture user selection
+        levelUpUI.ShowLevelUpOptions();
+        PopulateLevelUpOptions();
+    }
+
+    private void PopulateLevelUpOptions()
+    {
+        // Populate the buttons with random options from available items and weapons
+        for (int i = 0; i < LevelUpButtons.Length; i++)
         {
-            item.ResetToBase();
+            // For demonstration purposes, we'll alternate between adding weapons and items
+            if (i % 2 == 0) 
+            {
+                Weapon randomWeapon = playerInventory.availableWeapons[UnityEngine.Random.Range(0, playerInventory.availableWeapons.Count)];
+                LevelUpButtons[i].GetComponentInChildren<Text>().text = randomWeapon.name;
+                LevelUpButtons[i].onClick.RemoveAllListeners();
+                LevelUpButtons[i].onClick.AddListener(() => AddWeaponToInventory(randomWeapon));
+            }
+            else 
+            {
+                PassiveItem randomItem = playerInventory.availablePassiveItems[UnityEngine.Random.Range(0, playerInventory.availablePassiveItems.Count)];
+                LevelUpButtons[i].GetComponentInChildren<Text>().text = randomItem.name;
+                LevelUpButtons[i].onClick.RemoveAllListeners();
+                LevelUpButtons[i].onClick.AddListener(() => AddItemToInventory(randomItem));
+            }
+        }
+    }
+
+    private void AddItemToInventory(PassiveItem selectedItem)
+    {
+        if (playerInventory.ownedPassiveItems.Contains(selectedItem))
+        {
+            selectedItem.UpgradeToNewRank(playerStats);  // Now passing playerStats as an argument
+        }
+        else
+        {
+            playerInventory.ownedPassiveItems.Add(selectedItem);
         }
 
-        // Reset all owned weapons to their base stats
-        foreach (Weapon weapon in playerInventory.ownedWeapons)
+        LevelUpUI.SetActive(false);
+        Time.timeScale = 1f;
+    }
+
+    private void AddWeaponToInventory(Weapon selectedWeapon)
+    {
+        if (playerInventory.ownedWeapons.Contains(selectedWeapon))
         {
-            weapon.ResetToBase();
+            selectedWeapon.UpgradeToNewRank();  // No arguments here
         }
-        
-        // Any other logic like analytics or updates can be added here
+        else
+        {
+            playerInventory.ownedWeapons.Add(selectedWeapon);
+        }
+
+        LevelUpUI.SetActive(false);
+        Time.timeScale = 1f;
     }
 
-    public void ResetPlayerForNewRun()
-    {
-        // Clear the player's inventory
-        playerInventory.ownedPassiveItems.Clear();
-        playerInventory.ownedWeapons.Clear();
-
-        // Reset the player's stats to base level
-        playerStats.ResetToBase();
-
-        // ... any other reset logic ...
-    }
-
-    public void RestartGame()
-    {
-        // This function will restart the scene, which in turn resets everything
-        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
-    }
 
     private void OnDestroy()
     {
+        ExperienceSystem playerXPSystem = FindObjectOfType<ExperienceSystem>();
+        if (playerXPSystem)
+        {
+            playerXPSystem.OnLevelUp.RemoveListener(OnPlayerLevelUp);
+        }
+
         HealthSystem playerHealth = FindObjectOfType<Player>()?.GetComponent<HealthSystem>();
         if (playerHealth)
+        {
             playerHealth.OnDeath -= HandlePlayerDeath;
+        }
     }
-
 }

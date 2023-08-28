@@ -24,7 +24,7 @@ public class EnemySpawner : MonoBehaviour
         }
         else
         {
-            Debug.Log("Enemy prefab is assigned");
+            //Debug.Log("Enemy prefab is assigned");
         }
     }
 
